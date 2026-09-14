@@ -169,28 +169,148 @@
 }
 
 .brand-mark::before {
-  content: '';
-  position: absolute;
-  width: 7px;
-  height: 52px;
-  transform: rotate(35deg);
-  background: repeating-linear-gradient(
-    180deg,
-    #8c4a5a 0 7px,
-    #fff8f1 7px 12px,
-    #d9a441 12px 19px,
-    #fff8f1 19px 24px
-  );
-  opacity: 0.88;
+  content: none;
 }
 
-.brand-mark span {
+.brand-mark-pole {
   position: relative;
   z-index: 1;
-  color: #8c4a5a;
-  font-family: var(--app-font-serif);
-  font-size: 1.1rem;
-  font-weight: 600;
+  display: block;
+  width: 12px;
+  height: 23px;
+  overflow: hidden;
+  border: 1px solid rgba(140, 74, 90, 0.25);
+  border-radius: 8px;
+  background: #fff8f1;
+  box-shadow: 0 2px 4px rgba(62, 46, 43, 0.12);
+}
+
+.brand-mark-pole::before {
+  content: '';
+  position: absolute;
+  inset: -8px -14px;
+  background: repeating-linear-gradient(
+    135deg,
+    #8c4a5a 0 5px,
+    #fff8f1 5px 9px,
+    #d9a441 9px 14px,
+    #fff8f1 14px 18px
+  );
+  animation: mini-barber-stripes 1.5s linear infinite;
+}
+
+.brand-mark-pole::after {
+  content: '';
+  position: absolute;
+  inset: 2px 3px;
+  border-right: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 50%;
+  opacity: 0.7;
+}
+
+.hero-barber-pole {
+  position: absolute;
+  z-index: 2;
+  top: 116px;
+  left: max(14px, calc((100vw - 1360px) / 2));
+  transform: rotate(-2deg);
+}
+
+.barber-pole {
+  width: 54px;
+  filter: drop-shadow(0 12px 12px rgba(62, 46, 43, 0.12));
+  pointer-events: none;
+}
+
+.barber-pole-top {
+  position: relative;
+  z-index: 2;
+  height: 40px;
+}
+
+.barber-pole-cap {
+  position: absolute;
+  top: 3px;
+  left: 5px;
+  width: 44px;
+  height: 14px;
+  border: 2px solid #6e3d47;
+  border-radius: 50%;
+  background: #8c4a5a;
+}
+
+.barber-pole-globe {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  width: 34px;
+  height: 28px;
+  border: 2px solid #6e3d47;
+  border-radius: 50%;
+  background: #fff8f1;
+  box-shadow: inset 6px 0 0 rgba(255, 255, 255, 0.6);
+}
+
+.barber-pole-body {
+  position: relative;
+  width: 41px;
+  height: 154px;
+  margin: -2px auto 0;
+  overflow: hidden;
+  border: 2px solid #6e3d47;
+  border-radius: 21px;
+  background: #fff8f1;
+}
+
+.barber-pole-stripes {
+  position: absolute;
+  inset: -40px -22px;
+  background: repeating-linear-gradient(
+    135deg,
+    #8c4a5a 0 15px,
+    #fff8f1 15px 25px,
+    #d9a441 25px 37px,
+    #fff8f1 37px 47px
+  );
+  animation: barber-stripes 1.4s linear infinite;
+}
+
+.barber-pole-body::after {
+  content: '';
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 7px;
+  width: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.48);
+}
+
+.barber-pole-base {
+  width: 57px;
+  height: 12px;
+  margin: -1px auto 0;
+  border: 2px solid #6e3d47;
+  border-radius: 50%;
+  background: #8c4a5a;
+}
+
+@keyframes barber-stripes {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 33.234px 33.234px;
+  }
+}
+
+@keyframes mini-barber-stripes {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 12.728px 12.728px;
+  }
 }
 
 .desktop-nav {
@@ -604,6 +724,39 @@
   margin-top: 17px;
 }
 
+.founder-note {
+  max-width: 570px;
+  margin-top: 34px;
+  padding-top: 27px;
+  border-top: 1px solid rgba(140, 74, 90, 0.2);
+}
+
+.founder-note-label {
+  color: #8c4a5a;
+  font-size: 0.73rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.founder-note p {
+  margin-top: 14px;
+  font-size: 1rem;
+}
+
+.inline-link {
+  color: #8c4a5a;
+  font-weight: 700;
+  text-decoration-color: #d9a441;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  transition: color 180ms ease;
+}
+
+.inline-link:hover {
+  color: #753a4a;
+}
+
 .quote-box {
   position: relative;
   border-radius: 28px;
@@ -932,8 +1085,8 @@
   border-radius: 7px;
 }
 
-.footer-brand .brand-mark span {
-  font-size: 0.86rem;
+.footer-brand .brand-mark-pole {
+  transform: scale(0.82);
 }
 
 .footer-text {
@@ -1041,6 +1194,14 @@
     padding: 61px 0 83px;
   }
 
+  .hero-barber-pole {
+    top: 2px;
+    left: -1px;
+    transform: scale(0.55) rotate(-2deg);
+    transform-origin: top left;
+    opacity: 0.7;
+  }
+
   .hero::before {
     top: 250px;
     right: -48%;
@@ -1114,6 +1275,11 @@
 
   .quote-box {
     padding: 37px 27px 30px;
+  }
+
+  .founder-note {
+    margin-top: 30px;
+    padding-top: 23px;
   }
 
   .quote-box blockquote {

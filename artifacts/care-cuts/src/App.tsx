@@ -21,10 +21,25 @@ function Brand() {
   return (
     <a className="brand" href="#top" data-testid="link-brand">
       <span className="brand-mark" aria-hidden="true">
-        <span>C</span>
+        <span className="brand-mark-pole" />
       </span>
       <span>Care Cuts</span>
     </a>
+  );
+}
+
+function BarberPole({ className = '' }: { className?: string }) {
+  return (
+    <div className={`barber-pole ${className}`} aria-hidden="true">
+      <div className="barber-pole-top">
+        <span className="barber-pole-cap" />
+        <span className="barber-pole-globe" />
+      </div>
+      <div className="barber-pole-body">
+        <span className="barber-pole-stripes" />
+      </div>
+      <div className="barber-pole-base" />
+    </div>
   );
 }
 
@@ -75,6 +90,7 @@ function Home() {
 
       <main>
         <section className="hero" aria-labelledby="hero-title">
+          <BarberPole className="hero-barber-pole" />
           <div className="section-shell hero-grid">
             <div className="reveal">
               <div className="eyebrow">A little care, brought closer</div>
@@ -144,6 +160,11 @@ function Home() {
               <h2 id="why-title">Feeling cared for is not a small thing.</h2>
               <p>Grooming is one of the few things a person can still choose when so much else is out of their hands. The way their hair falls. The comfort of a clean face. How they meet the day.</p>
               <p>A haircut does not fix a hard stretch. But it can offer a moment of privacy, dignity, and being seen as a whole person.</p>
+              <div className="founder-note">
+                <div className="founder-note-label">How Care Cuts began</div>
+                <p>Care Cuts was started by medical students. During COVID, we learned to cut hair on friends and family. Later, we saw how inpatients face that same isolation in hospital rooms, with fewer chances to feel like themselves.</p>
+                <p>Studies have linked personal hygiene with social wellbeing and better hospital outcomes. We believe a little care, offered at the right pace, can make a hard day feel more human.</p>
+              </div>
             </div>
             <aside className="quote-box" data-testid="quote-placeholder">
               <blockquote>“Placeholder quote: I felt like myself again.”</blockquote>
@@ -202,7 +223,7 @@ function Home() {
             <div className="volunteer-intro">
               <div className="section-kicker">Volunteer</div>
               <h2 id="volunteer-title">Bring your hands. Bring your patience.</h2>
-              <p>New volunteers train with barbers from Snow Leopard Barbershop, then pair with someone experienced before heading out on their own. You do not have to know everything. You just have to be willing to listen and learn.</p>
+              <p>New volunteers train with barbers from <a className="inline-link" href="https://www.snowleopardbarbershop.com/" target="_blank" rel="noreferrer">Snow Leopard Barbershop</a>, then pair with someone experienced before heading out on their own. You do not have to know everything. You just have to be willing to listen and learn.</p>
               <a className="button-primary volunteer-link" href="#contact" data-testid="button-volunteer-interest">
                 I want to volunteer <ArrowDownRight size={17} />
               </a>
@@ -251,7 +272,7 @@ function Home() {
         <div className="section-shell footer-inner">
           <div className="footer-brand">
             <span className="brand-mark" aria-hidden="true">
-              <span>C</span>
+                <span className="brand-mark-pole" />
             </span>
             <span>Care Cuts</span>
           </div>
