@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Care Cuts"
+description = "A warm, responsive one-page website for Care Cuts, an independent Colorado volunteer program bringing free haircuts, shaves, and basic hygiene care to people who cannot easily get to a barber chair."
+version = "1.0.0"
+id = "artifacts/care-cuts"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24102
+
+[services.development]
+run = "pnpm --filter @workspace/care-cuts run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/care-cuts", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/care-cuts/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24102"
+BASE_PATH = "/"
