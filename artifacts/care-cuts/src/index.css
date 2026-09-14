@@ -418,7 +418,7 @@
   font-family: var(--app-font-serif);
   font-size: clamp(3.4rem, 7.2vw, 6.45rem);
   font-weight: 600;
-  letter-spacing: -0.064em;
+  letter-spacing: -0.035em;
   line-height: 0.95;
 }
 
