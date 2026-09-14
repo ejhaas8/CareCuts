@@ -1,4 +1,4 @@
-import { type ReactNode, useState } from 'react';
+import { type FormEvent, type ReactNode, useState } from 'react';
 import { ArrowDownRight, Menu, X } from 'lucide-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from '@/components/error-boundary';
@@ -45,8 +45,44 @@ function BarberPole({ className = '' }: { className?: string }) {
 
 function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [volunteerSent, setVolunteerSent] = useState(false);
+  const [visitRequestSent, setVisitRequestSent] = useState(false);
 
   const closeMenu = () => setMenuOpen(false);
+
+  const handleVolunteerSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const name = String(formData.get('name') ?? '');
+    const email = String(formData.get('email') ?? '');
+    const location = String(formData.get('location') ?? '');
+    const note = String(formData.get('note') ?? '');
+    const subject = encodeURIComponent(`Volunteer interest from ${name}`);
+    const body = encodeURIComponent(
+      `Name: ${name}\nEmail: ${email}\nCity or region: ${location}\n\nA little about me:\n${note}`,
+    );
+
+    setVolunteerSent(true);
+    window.location.href = `mailto:hello@carecutsco.org?subject=${subject}&body=${body}`;
+  };
+
+  const handleVisitRequestSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const requester = String(formData.get('requester') ?? '');
+    const email = String(formData.get('requesterEmail') ?? '');
+    const person = String(formData.get('person') ?? '');
+    const location = String(formData.get('visitLocation') ?? '');
+    const care = String(formData.get('care') ?? '');
+    const note = String(formData.get('requestNote') ?? '');
+    const subject = encodeURIComponent(`Visit request for ${person}`);
+    const body = encodeURIComponent(
+      `Requested by: ${requester}\nReply email: ${email}\nPerson we'd be visiting: ${person}\nWhere the visit would happen: ${location}\nCare that would feel good: ${care}\n\nAnything else to know:\n${note}`,
+    );
+
+    setVisitRequestSent(true);
+    window.location.href = `mailto:hello@carecutsco.org?subject=${subject}&body=${body}`;
+  };
 
   return (
     <div className="site-shell" id="top">
@@ -195,7 +231,7 @@ function Home() {
                   </div>
                 </div>
               </div>
-              <a className="button-primary" href="#contact" style={{ marginTop: '32px' }} data-testid="button-start-request">
+              <a className="button-primary" href="#request-form" style={{ marginTop: '32px' }} data-testid="button-start-request">
                 Start a request <ArrowDownRight size={17} />
               </a>
             </div>
@@ -216,6 +252,50 @@ function Home() {
               ))}
             </div>
           </div>
+          <div className="section-shell request-form-shell">
+            <div className="request-form-card" id="request-form">
+              <div className="request-form-intro">
+                <div className="section-kicker">Visit request</div>
+                <h3>Tell us what would help.</h3>
+                <p>Share a few details and we will follow up with a person, not an automated reply. Please leave out private medical details.</p>
+              </div>
+              <form className="request-form" onSubmit={handleVisitRequestSubmit}>
+                <div className="form-field">
+                  <label htmlFor="requester-name">Your name</label>
+                  <input id="requester-name" name="requester" type="text" autoComplete="name" required />
+                </div>
+                <div className="form-field">
+                  <label htmlFor="requester-email">Your email address</label>
+                  <input id="requester-email" name="requesterEmail" type="email" autoComplete="email" required />
+                </div>
+                <div className="form-field">
+                  <label htmlFor="visit-person">Person we would visit</label>
+                  <input id="visit-person" name="person" type="text" required />
+                </div>
+                <div className="form-field">
+                  <label htmlFor="visit-location">Where would the visit happen?</label>
+                  <input id="visit-location" name="visitLocation" type="text" placeholder="Home, shelter, school, hospital room..." required />
+                </div>
+                <div className="form-field form-field-full">
+                  <label htmlFor="visit-care">What kind of care would feel good?</label>
+                  <input id="visit-care" name="care" type="text" placeholder="A trim, shave, washing, detangling..." required />
+                </div>
+                <div className="form-field form-field-full">
+                  <label htmlFor="request-note">Anything else we should know?</label>
+                  <textarea id="request-note" name="requestNote" placeholder="A little context about the visit..." required />
+                </div>
+                <button className="button-primary request-submit" type="submit">
+                  Send visit request <ArrowDownRight size={17} />
+                </button>
+                <p className="form-note">This opens your email app with your answers filled in for hello@carecutsco.org.</p>
+                {visitRequestSent && (
+                  <p className="form-success" role="status">
+                    Your email draft is ready. If it did not open, write to <a href="mailto:hello@carecutsco.org">hello@carecutsco.org</a>.
+                  </p>
+                )}
+              </form>
+            </div>
+          </div>
         </section>
 
         <section className="volunteer-section" id="volunteer" aria-labelledby="volunteer-title">
@@ -224,7 +304,7 @@ function Home() {
               <div className="section-kicker">Volunteer</div>
               <h2 id="volunteer-title">Bring your hands. Bring your patience.</h2>
               <p>New volunteers train with barbers from <a className="inline-link" href="https://www.snowleopardbarbershop.com/" target="_blank" rel="noreferrer">Snow Leopard Barbershop</a>, then pair with someone experienced before heading out on their own. You do not have to know everything. You just have to be willing to listen and learn.</p>
-              <a className="button-primary volunteer-link" href="#contact" data-testid="button-volunteer-interest">
+              <a className="button-primary volunteer-link" href="#volunteer-form" data-testid="button-volunteer-interest">
                 I want to volunteer <ArrowDownRight size={17} />
               </a>
             </div>
@@ -237,6 +317,42 @@ function Home() {
                 <li>Simple, thoughtful care — never a performance</li>
                 <li>Time to ask questions and find your comfort level</li>
               </ul>
+            </div>
+          </div>
+          <div className="section-shell volunteer-form-shell">
+            <div className="volunteer-form-card" id="volunteer-form">
+              <div className="volunteer-form-intro">
+                <div className="section-kicker">Volunteer interest</div>
+                <h3>Tell us a little about yourself.</h3>
+                <p>Share a few details and we will start a conversation. You do not need to have barbering experience to reach out.</p>
+              </div>
+              <form className="volunteer-form" onSubmit={handleVolunteerSubmit}>
+                <div className="form-field">
+                  <label htmlFor="volunteer-name">Your name</label>
+                  <input id="volunteer-name" name="name" type="text" autoComplete="name" required />
+                </div>
+                <div className="form-field">
+                  <label htmlFor="volunteer-email">Email address</label>
+                  <input id="volunteer-email" name="email" type="email" autoComplete="email" required />
+                </div>
+                <div className="form-field form-field-full">
+                  <label htmlFor="volunteer-location">City or region</label>
+                  <input id="volunteer-location" name="location" type="text" autoComplete="address-level2" required />
+                </div>
+                <div className="form-field form-field-full">
+                  <label htmlFor="volunteer-note">A little about you</label>
+                  <textarea id="volunteer-note" name="note" placeholder="What brings you to Care Cuts?" required />
+                </div>
+                <button className="button-primary volunteer-submit" type="submit">
+                  Send volunteer request <ArrowDownRight size={17} />
+                </button>
+                <p className="form-note">This opens your email app with your answers filled in for hello@carecutsco.org.</p>
+                {volunteerSent && (
+                  <p className="form-success" role="status">
+                    Your email draft is ready. If it did not open, write to <a href="mailto:hello@carecutsco.org">hello@carecutsco.org</a>.
+                  </p>
+                )}
+              </form>
             </div>
           </div>
         </section>
