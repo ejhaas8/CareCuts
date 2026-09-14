@@ -757,6 +757,15 @@
   color: #753a4a;
 }
 
+.volunteer-intro .inline-link {
+  color: #fff8f1;
+  font-weight: 700;
+}
+
+.volunteer-intro .inline-link:hover {
+  color: #ffffff;
+}
+
 .quote-box {
   position: relative;
   border-radius: 28px;

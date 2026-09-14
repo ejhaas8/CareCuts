@@ -132,7 +132,7 @@ function Home() {
               <div>
                 <h2 id="what-we-do-title">A little room to feel like yourself again.</h2>
                 <p>
-                  Long hospital stays, hard stretches at home, and changes in mobility can make ordinary grooming feel far away. We bring a calm, capable pair of hands to wherever someone is.
+                  Long hospital stays, hard stretches at home, or a season when someone cannot get to their regular barber can make ordinary grooming feel far away. We visit hospital rooms, shelters, high schools, private homes, and other places where people could use a little time and care.
                 </p>
               </div>
             </div>
@@ -178,13 +178,13 @@ function Home() {
             <div className="invite-copy">
               <div className="section-kicker">Request a visit</div>
               <h2 id="request-title">Just ask. We will start there.</h2>
-              <p>Anyone can ask for a visit. The person does not need to be a patient, and you do not need to have the perfect words. Tell us what would make the day feel a little more manageable.</p>
+              <p>Anyone can ask for a visit. The person does not need to be a patient, confined to a hospital, or unable to leave home. Reach out if they are not mobile right now, have time before they can see their regular barber, or would feel more like themselves with a little grooming and company.</p>
               <div className="audience-list">
                 <div className="audience-item">
                   <span className="audience-dot" aria-hidden="true" />
                   <div>
                     <h3>Who we visit</h3>
-                    <p>People at home, in hospitals, shelters, and supportive living spaces across Colorado.</p>
+                    <p>People in hospital rooms, shelters, high schools, private homes, and supportive living spaces across Colorado — including people who are not mobile or are waiting until they can see their regular barber.</p>
                   </div>
                 </div>
                 <div className="audience-item">
@@ -201,7 +201,7 @@ function Home() {
             </div>
             <div className="process" aria-label="How to request a visit">
               {[
-                ['1', 'Reach out', 'Send a note or ask a nurse, shelter staff member, or loved one to contact us.'],
+                ['1', 'Reach out', 'Send a note or ask a nurse, shelter staff member, school staff member, or loved one to contact us.'],
                 ['2', 'We listen', 'We will ask a few gentle questions and find a time that works.'],
                 ['3', 'We come to you', 'A trained volunteer arrives with what we need and plenty of time.'],
                 ['4', 'Take your time', 'We care for hair, beards, and basic hygiene — at the person’s pace.'],
