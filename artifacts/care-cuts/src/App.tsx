@@ -139,7 +139,7 @@ function Home() {
             <div className="offering-grid">
               {[
                 ['01', 'Shaves and beard care', 'A close shave, a tidy-up, or a beard shaped with patience.'],
-                ['02', 'Haircuts and styling', 'A fresh cut that meets someone exactly where they are.'],
+                ['02', 'Trimming and styling', 'Trimming, shape-ups, and styling that meet someone exactly where they are.'],
                 ['03', 'Washing and detangling', 'Gentle washing, brushing, and detangling without the hurry.'],
                 ['04', 'Take-home kit', 'Simple essentials to make the next day a little easier.'],
               ].map(([number, title, description]) => (
