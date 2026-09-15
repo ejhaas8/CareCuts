@@ -123,7 +123,6 @@ function Home() {
           </nav>
         </div>
       </header>
-
       <main>
         <section className="hero" aria-labelledby="hero-title">
           <BarberPole className="hero-barber-pole" />
@@ -376,14 +375,11 @@ function Home() {
           <div className="section-shell contact-copy">
             <span className="section-kicker">Contact</span>
             <h2 id="contact-title">Say hello.</h2>
-            <a className="email-link" href="mailto:hello@carecutsco.org" data-testid="link-email">
-              hello@carecutsco.org
-            </a>
+            <a className="email-link" href="mailto:hello@carecutsco.org" data-testid="link-email">ejhaas8@gmail.com</a>
             <p className="contact-note">A real person reads this inbox. We will get back to you as soon as we can.</p>
           </div>
         </section>
       </main>
-
       <footer className="site-footer">
         <div className="section-shell footer-inner">
           <div className="footer-brand">
