@@ -202,7 +202,7 @@ function Home() {
               </div>
             </div>
             <aside className="quote-box" data-testid="quote-placeholder">
-              <blockquote>“Placeholder quote: I felt like myself again.”</blockquote>
+              <blockquote>We cannot thank them enough!</blockquote>
               <cite>— A care partner (replace with a real quote)</cite>
             </aside>
           </div>
