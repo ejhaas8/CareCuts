@@ -9,6 +9,26 @@ import { Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
 
 const queryClient = new QueryClient();
 
+// Paste the access key Web3Forms emailed you between the quotes.
+const WEB3FORMS_KEY = 'bf5e56cf-03f6-4fa9-956c-f7db0f8f17e0';
+
+// The email shown on the site and used as a backup if a form fails to send.
+const CONTACT_EMAIL = 'ejhaas8@gmail.com';
+
+type FormStatus = 'idle' | 'sending' | 'sent' | 'error';
+
+async function sendToWeb3Forms(fields: Record<string, string>) {
+  const response = await fetch('https://api.web3forms.com/submit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify({ access_key: WEB3FORMS_KEY, ...fields }),
+  });
+  const data = await response.json();
+  if (!data.success) {
+    throw new Error(data.message || 'Form submission failed');
+  }
+}
+
 const navItems = [
   { href: '#what-we-do', label: 'What we do' },
   { href: '#why-it-matters', label: 'Why it matters' },
@@ -43,45 +63,88 @@ function BarberPole({ className = '' }: { className?: string }) {
   );
 }
 
+function FormStatusMessage({ status }: { status: FormStatus }) {
+  if (status === 'sent') {
+    return (
+      <p className="form-success" role="status">
+        Thank you. Your message was sent, and a real person will be in touch soon.
+      </p>
+    );
+  }
+  if (status === 'error') {
+    return (
+      <p className="form-success" role="alert">
+        Your message did not send. Please try again, or write to us directly at{' '}
+        <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+      </p>
+    );
+  }
+  return null;
+}
+
 function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [volunteerSent, setVolunteerSent] = useState(false);
-  const [visitRequestSent, setVisitRequestSent] = useState(false);
+  const [volunteerStatus, setVolunteerStatus] = useState<FormStatus>('idle');
+  const [visitStatus, setVisitStatus] = useState<FormStatus>('idle');
 
   const closeMenu = () => setMenuOpen(false);
 
-  const handleVolunteerSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleVolunteerSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    if (formData.get('botcheck')) return;
     const name = String(formData.get('name') ?? '');
     const email = String(formData.get('email') ?? '');
     const location = String(formData.get('location') ?? '');
     const note = String(formData.get('note') ?? '');
-    const subject = encodeURIComponent(`Volunteer interest from ${name}`);
-    const body = encodeURIComponent(
-      `Name: ${name}\nEmail: ${email}\nCity or region: ${location}\n\nA little about me:\n${note}`,
-    );
 
-    setVolunteerSent(true);
-    window.location.href = `mailto:hello@carecutsco.org?subject=${subject}&body=${body}`;
+    setVolunteerStatus('sending');
+    try {
+      await sendToWeb3Forms({
+        subject: `Volunteer interest from ${name}`,
+        from_name: 'Care Cuts website',
+        name,
+        email,
+        'City or region': location,
+        'A little about me': note,
+      });
+      setVolunteerStatus('sent');
+      form.reset();
+    } catch {
+      setVolunteerStatus('error');
+    }
   };
 
-  const handleVisitRequestSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleVisitRequestSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    if (formData.get('botcheck')) return;
     const requester = String(formData.get('requester') ?? '');
     const email = String(formData.get('requesterEmail') ?? '');
     const person = String(formData.get('person') ?? '');
     const location = String(formData.get('visitLocation') ?? '');
     const care = String(formData.get('care') ?? '');
     const note = String(formData.get('requestNote') ?? '');
-    const subject = encodeURIComponent(`Visit request for ${person}`);
-    const body = encodeURIComponent(
-      `Requested by: ${requester}\nReply email: ${email}\nPerson we'd be visiting: ${person}\nWhere the visit would happen: ${location}\nCare that would feel good: ${care}\n\nAnything else to know:\n${note}`,
-    );
 
-    setVisitRequestSent(true);
-    window.location.href = `mailto:hello@carecutsco.org?subject=${subject}&body=${body}`;
+    setVisitStatus('sending');
+    try {
+      await sendToWeb3Forms({
+        subject: `Visit request for ${person}`,
+        from_name: 'Care Cuts website',
+        name: requester,
+        email,
+        "Person we'd be visiting": person,
+        'Where the visit would happen': location,
+        'Care that would feel good': care,
+        'Anything else to know': note,
+      });
+      setVisitStatus('sent');
+      form.reset();
+    } catch {
+      setVisitStatus('error');
+    }
   };
 
   return (
@@ -259,6 +322,7 @@ function Home() {
                 <p>Share a few details and we will follow up with a person, not an automated reply. Please leave out private medical details.</p>
               </div>
               <form className="request-form" onSubmit={handleVisitRequestSubmit}>
+                <input type="checkbox" name="botcheck" style={{ display: 'none' }} tabIndex={-1} autoComplete="off" />
                 <div className="form-field">
                   <label htmlFor="requester-name">Your name</label>
                   <input id="requester-name" name="requester" type="text" autoComplete="name" required />
@@ -283,15 +347,11 @@ function Home() {
                   <label htmlFor="request-note">Anything else we should know?</label>
                   <textarea id="request-note" name="requestNote" placeholder="A little context about the visit..." required />
                 </div>
-                <button className="button-primary request-submit" type="submit">
-                  Send visit request <ArrowDownRight size={17} />
+                <button className="button-primary request-submit" type="submit" disabled={visitStatus === 'sending'}>
+                  {visitStatus === 'sending' ? 'Sending...' : 'Send visit request'} <ArrowDownRight size={17} />
                 </button>
-                <p className="form-note">This opens your email app with your answers filled in for hello@carecutsco.org.</p>
-                {visitRequestSent && (
-                  <p className="form-success" role="status">
-                    Your email draft is ready. If it did not open, write to <a href="mailto:hello@carecutsco.org">hello@carecutsco.org</a>.
-                  </p>
-                )}
+                <p className="form-note">Your request goes straight to our inbox.</p>
+                <FormStatusMessage status={visitStatus} />
               </form>
             </div>
           </div>
@@ -326,6 +386,7 @@ function Home() {
                 <p>Share a few details and we will start a conversation. You do not need to have barbering experience to reach out.</p>
               </div>
               <form className="volunteer-form" onSubmit={handleVolunteerSubmit}>
+                <input type="checkbox" name="botcheck" style={{ display: 'none' }} tabIndex={-1} autoComplete="off" />
                 <div className="form-field">
                   <label htmlFor="volunteer-name">Your name</label>
                   <input id="volunteer-name" name="name" type="text" autoComplete="name" required />
@@ -342,15 +403,11 @@ function Home() {
                   <label htmlFor="volunteer-note">A little about you</label>
                   <textarea id="volunteer-note" name="note" placeholder="What brings you to Care Cuts?" required />
                 </div>
-                <button className="button-primary volunteer-submit" type="submit">
-                  Send volunteer request <ArrowDownRight size={17} />
+                <button className="button-primary volunteer-submit" type="submit" disabled={volunteerStatus === 'sending'}>
+                  {volunteerStatus === 'sending' ? 'Sending...' : 'Send volunteer request'} <ArrowDownRight size={17} />
                 </button>
-                <p className="form-note">This opens your email app with your answers filled in for hello@carecutsco.org.</p>
-                {volunteerSent && (
-                  <p className="form-success" role="status">
-                    Your email draft is ready. If it did not open, write to <a href="mailto:hello@carecutsco.org">hello@carecutsco.org</a>.
-                  </p>
-                )}
+                <p className="form-note">Your message goes straight to our inbox.</p>
+                <FormStatusMessage status={volunteerStatus} />
               </form>
             </div>
           </div>
@@ -375,7 +432,7 @@ function Home() {
           <div className="section-shell contact-copy">
             <span className="section-kicker">Contact</span>
             <h2 id="contact-title">Say hello.</h2>
-            <a className="email-link" href="mailto:hello@carecutsco.org" data-testid="link-email">ejhaas8@gmail.com</a>
+            <a className="email-link" href={`mailto:${CONTACT_EMAIL}`} data-testid="link-email">{CONTACT_EMAIL}</a>
             <p className="contact-note">A real person reads this inbox. We will get back to you as soon as we can.</p>
           </div>
         </section>
