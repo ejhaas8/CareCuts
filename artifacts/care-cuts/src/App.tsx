@@ -218,7 +218,7 @@ function Home() {
               </div>
               <h2>There is no rush in this chair.</h2>
               <p>Sometimes the best part is having someone sit beside you, ask how you are, and listen for the answer.</p>
-              <span className="card-signature">with care,</span>
+              <span className="card-signature">with care,<br />Evan</span>
             </div>
           </div>
         </section>
